@@ -1,58 +1,16 @@
 input.onButtonPressed(Button.A, function () {
-    if (etat == 1) {
-        radio.sendString("R")
-        etat = 2
-        basic.showString("R")
-        basic.pause(2000)
-        basic.showLeds(`
-            . . # . .
-            . # . . .
-            # # # # #
-            . # . . .
-            . . # . .
-            `)
-    } else if (etat == 2) {
-        radio.sendString("S")
-        etat = 3
-        basic.showString("S")
-        basic.pause(2000)
-        basic.showLeds(`
-            . . # . .
-            . # . . .
-            # # # # #
-            . # . . .
-            . . # . .
-            `)
-    } else if (etat == 3) {
-        radio.sendString("A")
-        etat = 4
-        basic.showString("A")
-        basic.pause(2000)
-        basic.showLeds(`
-            . . . . .
-            . . . . .
-            # # # # #
-            . . . . .
-            . . . . .
-            `)
-    }
+    _bouton = "A"
+})
+radio.onReceivedString(function (receivedString) {
+    msg = receivedString
 })
 input.onButtonPressed(Button.B, function () {
-    if (etat == 0) {
-        radio.sendString("B")
-        etat = 1
-        basic.showString("B")
-        basic.pause(2000)
-        basic.showLeds(`
-            . . # . .
-            . # . . .
-            # # # # #
-            . # . . .
-            . . # . .
-            `)
-    }
+    _bouton = "B"
 })
+let msg_lu = ""
 let etat = 0
+let msg = ""
+let _bouton = ""
 radio.setGroup(1)
 basic.showLeds(`
     . . # . .
@@ -61,4 +19,76 @@ basic.showLeds(`
     . . . # .
     . . # . .
     `)
-etat = 0
+let etat_suivant = 0
+basic.forever(function () {
+    etat = etat_suivant
+    msg_lu = msg
+    if (etat == 1) {
+        radio.sendString("B")
+        basic.showString("B")
+        basic.pause(2000)
+    } else if (etat == 2) {
+        basic.showString("RO")
+    } else if (etat == 3) {
+        basic.showString("RO")
+        basic.pause(200)
+        basic.showLeds(`
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            `)
+    } else if (etat == 4) {
+        radio.sendString("S")
+        basic.showLeds(`
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            `)
+        basic.pause(200)
+        basic.showLeds(`
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            `)
+    } else if (etat == 5) {
+        radio.sendString("A")
+        basic.showLeds(`
+            . . . . .
+            . . . . .
+            # # # # #
+            . . . . .
+            . . . . .
+            `)
+    } else {
+    	
+    }
+    if (etat == 0) {
+        if (_bouton == "B") {
+            etat_suivant = 1
+        }
+    } else if (etat == 1) {
+        if (msg_lu == "FB") {
+            etat_suivant = 2
+        }
+    } else if (etat == 2) {
+        if (msg_lu == "ST") {
+            etat_suivant = 3
+        }
+    } else if (etat == 3) {
+        if (_bouton == "A") {
+            etat_suivant = 4
+        }
+    } else if (etat == 4) {
+        if (_bouton == "A") {
+            etat_suivant = 5
+        }
+    } else {
+    	
+    }
+})
