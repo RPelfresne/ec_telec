@@ -13,11 +13,11 @@ let msg = ""
 let _bouton = ""
 radio.setGroup(1)
 basic.showLeds(`
-    . . # . .
-    . . . # .
+    # . # . .
+    # . . # .
     # # # # #
-    . . . # .
-    . . # . .
+    # . . # .
+    # . # . .
     `)
 let etat_suivant = 0
 basic.forever(function () {
@@ -26,11 +26,18 @@ basic.forever(function () {
     if (etat == 1) {
         radio.sendString("B")
         basic.showString("B")
-        basic.pause(2000)
+        basic.pause(100)
     } else if (etat == 2) {
         basic.showString("RO")
     } else if (etat == 3) {
         basic.showString("RO")
+        basic.showLeds(`
+            . . # . .
+            . # . . .
+            # # # # #
+            . # . . .
+            . . # . .
+            `)
         basic.pause(200)
         basic.showLeds(`
             . . # . .
@@ -40,15 +47,7 @@ basic.forever(function () {
             . . # . .
             `)
     } else if (etat == 4) {
-        radio.sendString("S")
-        basic.showLeds(`
-            . . # . .
-            . # . . .
-            # # # # #
-            . # . . .
-            . . # . .
-            `)
-        basic.pause(200)
+        radio.sendString("SR")
         basic.showLeds(`
             . . # . .
             . # . . .
@@ -65,11 +64,17 @@ basic.forever(function () {
             . . . . .
             . . . . .
             `)
-    } else {
-    	
     }
     if (etat == 0) {
         if (_bouton == "B") {
+            _bouton = " "
+            basic.showLeds(`
+                . . . . .
+                . . # . .
+                . # # # .
+                . . # . .
+                . . . . .
+                `)
             etat_suivant = 1
         }
     } else if (etat == 1) {
@@ -77,18 +82,18 @@ basic.forever(function () {
             etat_suivant = 2
         }
     } else if (etat == 2) {
-        if (msg_lu == "ST") {
+        if (msg_lu == "FLR") {
             etat_suivant = 3
         }
     } else if (etat == 3) {
         if (_bouton == "A") {
+            _bouton = " "
             etat_suivant = 4
         }
     } else if (etat == 4) {
         if (_bouton == "A") {
+            _bouton = " "
             etat_suivant = 5
         }
-    } else {
-    	
     }
 })
